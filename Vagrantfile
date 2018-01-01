@@ -6,12 +6,11 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
+  # The most common configuration options are documented and commented below.  # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
+  # boxes at https://vagrantcloud.com/search.  
   config.vm.box = "ubuntu/xenial64"
 
   # Disable automatic box update checking. If you disable this, then
@@ -59,7 +58,16 @@ Vagrant.configure("2") do |config|
   #
   # View the documentation for the provider you are using for more
   # information on available options.
-
+	config.vm.provider :libvirt do |domain|
+    domain.memory = 12288
+    domain.cpus = 4
+    domain.kvm_hidden = true
+    domain.pcis = [{
+        bus: 2,
+        slot: 0,
+        function: 0,
+    }]
+  end
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
@@ -90,5 +98,9 @@ Vagrant.configure("2") do |config|
     apt-get -y -qq update
     apt-get -y -qq install nvidia-docker2
     pkill -SIGHUP dockerd
+
+    add-apt-repository ppa:graphics-drivers
+    apt-get update
+    apt-get install nvidia-375
   SHELL
 end
